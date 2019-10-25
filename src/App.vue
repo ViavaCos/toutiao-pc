@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    toutiao     <el-button type="danger">危险按钮</el-button>
+    <router-view></router-view>
   </div>
 </template>
 
