@@ -9,10 +9,12 @@ import Home from '@/views/home'
 import Welcome from '@/views/welcome'
 // 404组件
 import error from '@/views/404'
+// session工具
+import session from '@/utils/session'
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router = new VueRouter({
   routes: [{
     path: '/login', component: Login
   },
@@ -32,3 +34,22 @@ export default new VueRouter({
   },
   { path: '*', component: error }]
 })
+
+// 设置路由守卫, 确保用户在非登录状态下不能进入系统并重定向至登录页面
+router.beforeEach((to, from, next) => {
+  let login = session.getToken()
+  if (login && login.token) {
+    // console.log(login)
+    next()
+  } else {
+    if (to.path === '/login') {
+      // console.log('*****', login)
+      next()
+    } else {
+      // console.log('xxxx', login)
+      next('/login')
+    }
+  }
+})
+
+export default router

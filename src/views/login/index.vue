@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import session from '@/utils/session.js'
+
 export default {
   data () {
     const checkLogin = (rule, value, callback) => {
@@ -64,7 +66,11 @@ export default {
             url: 'authorizations',
             method: 'post',
             data: this.form
-          }).then(() => {
+          }).then((data) => {
+            // console.log(data)
+            // console.log(session)
+            // 设置token
+            session.setToken(data.data.data)
             this.$router.push('/')
           }).catch(() => {
             this.$message.error('登录失败, 请重试！')
