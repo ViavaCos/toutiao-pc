@@ -4,12 +4,12 @@
       <img src="../../assets/logo_index.png" alt />
       <el-form ref="loginForm" :rules="rules" :model="form" status-icon>
         <el-form-item prop="mobile">
-          <el-input v-model="form.mobile" placeholder="请输入手机号"></el-input>
+          <el-input v-model="form.mobile" ref='mobile' placeholder="请输入手机号"></el-input>
         </el-form-item>
 
         <el-form-item prop="code">
           <el-input v-model="form.code" class="code" placeholder="请输入验证码"></el-input>
-          <el-button>发送验证码</el-button>
+          <el-button @click="sendCode">发送验证码</el-button>
         </el-form-item>
 
         <el-checkbox class="readRule" v-model="isChecked" label="我已阅读并同意用户协议和隐私条款"></el-checkbox>
@@ -95,6 +95,16 @@ export default {
           this.$message.error('登录失败, 请重试！')
         }
       })
+    },
+    sendCode () {
+      // console.log(this.$refs.mobile.value.trim)
+      if (!this.$refs.mobile.value.trim()) {
+        return this.$refs.mobile.focus()
+      }
+
+      if (/^1[3-9]\d{9}$/.test(this.$refs.mobile.value.trim())) {
+        this.$message({ message: '恭喜你，请求发送成功', type: 'success' })
+      }
     }
   }
 }
