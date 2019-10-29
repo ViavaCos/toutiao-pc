@@ -3,7 +3,7 @@
     <el-aside :width="!isCollapse?'200px':'64px'">
       <div class="logo" :class="{smallIcon:isCollapse}"></div>
       <el-menu
-        default-active="/"
+        :default-active="$route.path"
         background-color="#002033"
         active-text-color="#ffd04b"
         text-color="#fff"
@@ -45,36 +45,80 @@
       <el-header>
         <i class="el-icon-s-fold" @click="showSidebar"></i>
         <span>北京信息技术有限公司</span>
-        <el-dropdown>
+        <el-dropdown @command="dropLink">
           <span class="el-dropdown-link">
-              <img src="../../assets/avatar.jpg" alt="">
-            <span class="userName">用户名称</span>
+            <img :src="photo" alt />
+            <span class="userName">{{name}}</span>
             <span class="el-icon-arrow-down el-icon--right"></span>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-setting">个人设置</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-unlock">退出登录</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-setting" command="a">个人设置</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-unlock" command="b">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
       <el-main>
-          <router-view></router-view>
+        <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
+import session from '@/utils/session'
+
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      name: '',
+      photo: ''
     }
   },
   methods: {
     showSidebar () {
       this.isCollapse = !this.isCollapse
+    },
+    dropLink (command) {
+      switch (command) {
+        case 'a':
+          this.$router.push('/setting')
+          break
+        case 'b':
+          // if (confirm('确定要退出吗？')) {
+          //   this.$message({
+          //     message: '退出成功',
+          //     type: 'success'
+          //   })
+          // } else {
+          //   this.$message('取消退出')
+          // }
+          this.$confirm('确定要退出吗？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            session.delToken()
+            this.$router.push('/login')
+            this.$message({
+              type: 'success',
+              message: '退出成功!'
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消退出'
+            })
+          })
+          break
+      }
     }
+  },
+  created () {
+    // 防止token不存在会报错，所以放置一个空对象
+    let { name, photo } = session.getToken() || {}
+    this.name = name
+    this.photo = photo
   }
 }
 </script>
@@ -102,19 +146,19 @@ export default {
       vertical-align: middle;
     }
 
-    .el-dropdown{
-        float: right;
+    .el-dropdown {
+      float: right;
 
-        .userName{
-            font-weight: bold;
-            // vertical-align: middle;
-        }
+      .userName {
+        font-weight: bold;
+        // vertical-align: middle;
+      }
 
-        img{
-            width: 30px;
-            height: 30px;
-            vertical-align: middle;
-        }
+      img {
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+      }
     }
   }
 
@@ -127,14 +171,14 @@ export default {
         140px auto;
     }
 
-    .smallIcon{
-        background-image: url('../../assets/logo_admin_01.png');
-        background-size: 36px auto;
+    .smallIcon {
+      background-image: url("../../assets/logo_admin_01.png");
+      background-size: 36px auto;
     }
 
     .el-menu {
-    //   width: 200px;
-    border-right: none;
+      //   width: 200px;
+      border-right: none;
     }
   }
 }
