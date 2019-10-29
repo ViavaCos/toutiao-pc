@@ -9,12 +9,17 @@
 
         <el-form-item prop="code">
           <el-input v-model="form.code" class="code" placeholder="请输入验证码"></el-input>
-          <el-button >发送验证码</el-button>
+          <el-button>发送验证码</el-button>
         </el-form-item>
 
         <el-checkbox class="readRule" v-model="isChecked" label="我已阅读并同意用户协议和隐私条款"></el-checkbox>
       </el-form>
-      <el-button :disabled="!isChecked" type="primary" class="login" @click="login('loginForm')">立即登录</el-button>
+      <el-button
+        :disabled="!isChecked"
+        type="primary"
+        class="login"
+        @click="login('loginForm')"
+      >立即登录</el-button>
     </el-card>
   </div>
 </template>
@@ -50,33 +55,44 @@ export default {
         code: [
           { required: true, message: '请输入验证码', trigger: 'blur' },
           { len: 6, message: '验证码为6位', trigger: 'blur' }
-
         ]
       },
       isChecked: false
     }
   },
   methods: {
-
     // 登录
     login (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$axios({
+      this.$refs[formName].validate(async valid => {
+        // if (valid) {
+        //   this.$axios({
+        //     url: 'authorizations',
+        //     method: 'post',
+        //     data: this.form
+        //   }).then((data) => {
+        //     // console.log(data)
+        //     // console.log(session)
+        //     // 设置token
+        //     session.setToken(data.data.data)
+        //     this.$router.push('/')
+        //   }).catch(() => {
+        //     this.$message.error('登录失败, 请重试！')
+        //   })
+        // } else {
+        // alert('登录失败')
+        // }
+
+        // 使用async和await改造代码
+        try {
+          const { data: { data } } = await this.$axios({
             url: 'authorizations',
             method: 'post',
             data: this.form
-          }).then((data) => {
-            // console.log(data)
-            // console.log(session)
-            // 设置token
-            session.setToken(data.data.data)
-            this.$router.push('/')
-          }).catch(() => {
-            this.$message.error('登录失败, 请重试！')
           })
-        } else {
-          // alert('登录失败')
+          session.setToken(data)
+          this.$router.push('/')
+        } catch (error) {
+          this.$message.error('登录失败, 请重试！')
         }
       })
     }
