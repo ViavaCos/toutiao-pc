@@ -110,7 +110,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .container {
   background: url("../../assets/login_bg.jpg") no-repeat center / cover;
   width: 100%;

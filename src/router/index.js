@@ -11,6 +11,8 @@ import Welcome from '@/views/welcome'
 import error from '@/views/404'
 // session工具
 import session from '@/utils/session'
+// 文章管理
+import article from '@/views/article'
 
 Vue.use(VueRouter)
 
@@ -23,7 +25,7 @@ const router = new VueRouter({
     component: Home,
     children: [
       { path: '/', component: Welcome },
-      { path: 'article' },
+      { path: 'article', component: article },
       { path: '/image' },
       { path: '/publish' },
       { path: '/comment' },
