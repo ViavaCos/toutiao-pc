@@ -16,9 +16,9 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select v-model="queryDate.channel_id" placeholder="请选择" clearable>
-            <el-option v-for="item in channel" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
+          <!-- 文章频道组件 -->
+          <!-- 这里使用v-model 它默认会定义一个value的属性和监听input事件，恰好用来手动实现双向绑定 -->
+          <article-channel v-model="queryDate.channel_id"></article-channel>
         </el-form-item>
         <el-form-item label="日期">
           <el-date-picker
@@ -31,6 +31,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
+          <!-- size="small" 控制表单大小 -->
           <el-button type="primary" size="small" @click="getArticles">筛选</el-button>
         </el-form-item>
       </el-form>
@@ -40,6 +41,7 @@
       <el-table :data="tableData" style="width: 100%">
         <el-table-column label="封面">
           <template slot-scope="scope">
+            <!-- fit="fill"  图片平铺模式 -->
             <el-image :src="scope.row.cover.images[0]" style="height:100px;width:150px;" fit="fill">
               <div slot="error">
                 <img src="../../assets/error.gif" height="100" width="150" />
@@ -67,6 +69,8 @@
               plain
               circle
             ></el-button>
+            <!-- circle 圆形按钮 -->
+            <!-- plain 朴素的按钮 -->
             <el-button @click="del(scope.row.id)" type="danger" icon="el-icon-delete" plain circle></el-button>
           </template>
         </el-table-column>
@@ -94,7 +98,7 @@ export default {
         page: 1,
         per_page: 20
       },
-      channel: [{ label: 'Java', id: 0 }, { label: 'JavaScript', id: 1 }],
+      // channel: [{ label: 'Java', id: 0 }, { label: 'JavaScript', id: 1 }],
       //   data: [begin_pubdate, end_pubdate]
       data: [],
       total_count: 0,
@@ -103,7 +107,7 @@ export default {
   },
   created () {
     this.getArticles()
-    this.getChannels()
+    // this.getChannels()
   },
   methods: {
     // 获取文章列表
@@ -113,6 +117,9 @@ export default {
         this.queryDate.channel_id = null
       }
 
+      // 判断this.data是否为null，是则设置起始时间和截止时间都为null
+      // 因为如果你选择了时间，然后清除时间在筛选就会发现this.data并不是原来的数组了，而是null
+      // 这可能是element-ui的设置，所以使用length===0来判断数据是否为空则会报错
       if (this.data) {
         this.queryDate.begin_pubdate = this.data[0]
         this.queryDate.end_pubdate = this.data[1]
@@ -125,21 +132,23 @@ export default {
         data: { data }
       } = await this.$axios({
         url: 'articles',
+        // 使用非拼接字符串传递参数，需要设置一个params属性且其值为一个对象来传递更多的参数
         params: this.queryDate
       })
+      // 将请求来的数据设置给渲染列表的数据源
       this.tableData = data.results
       this.total_count = data.total_count
     },
-    // 获取频道
-    async getChannels () {
-      const {
-        data: { data }
-      } = await this.$axios({
-        url: 'channels'
-      })
-
-      this.channel = data.channels
-    },
+    // // 获取频道
+    // async getChannels () {
+    //   const {
+    //     data: { data }
+    //   } = await this.$axios({
+    //     url: 'channels'
+    //   })
+    //   // 将请求来的数据,放给渲染频道下拉选项的数据源
+    //   this.channel = data.channels
+    // },
     // 页面切换
     changePage (id) {
       this.queryDate.page = id
@@ -148,6 +157,8 @@ export default {
     },
     // 编辑
     toEdit (id) {
+      // 若以非拼接字符串的形式传递id，则可以使用query属性后边跟一个对象来传递,转换后的形式是url?id:xxx
+      // 注意：和这个很像的params是动态路由中的传递参数形式，转换后的形式是 url/id:xxx 这相当于是另一个路由了
       this.$router.push({ path: '/publish', query: { id } })
     },
     // 删除
@@ -174,13 +185,13 @@ export default {
           message: '删除成功',
           type: 'success'
         })
+        this.getArticles()
       } catch (e) {
         this.$message({
           message: '删除失败',
           type: 'error'
         })
       }
-      this.getArticles()
     }
   }
 }

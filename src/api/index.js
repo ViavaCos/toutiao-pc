@@ -22,6 +22,7 @@ axios.defaults.transformResponse = [(data) => {
 // axios.defaults.headers.Authorization = `Bearer ${data.token}`
 
 // 基于上述问题的bug，所以需要使用 请求拦截器 来解决
+// 拦截器axios.interceptors,request.use 参数包含两个参数
 axios.interceptors.request.use(config => {
   let data = session.getToken() || {}
   config.headers.Authorization = `Bearer ${data.token}`
@@ -38,7 +39,6 @@ axios.interceptors.response.use(config => config, error => {
     // window.location.hash = '#/login'
     return router.push('/login')
   }
-
   return Promise.reject(error)
 })
 
