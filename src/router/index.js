@@ -13,6 +13,8 @@ import error from '@/views/404'
 import session from '@/utils/session'
 // 文章管理
 import article from '@/views/article'
+// 素材管理
+import images from '@/views/images'
 
 Vue.use(VueRouter)
 
@@ -26,7 +28,7 @@ const router = new VueRouter({
     children: [
       { path: '/', component: Welcome },
       { path: 'article', component: article },
-      { path: '/image' },
+      { path: '/image', component: images },
       { path: '/publish' },
       { path: '/comment' },
       { path: '/fans' },

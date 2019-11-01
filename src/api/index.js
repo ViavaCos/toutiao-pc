@@ -26,7 +26,6 @@ axios.defaults.transformResponse = [(data) => {
 axios.interceptors.request.use(config => {
   let data = session.getToken() || {}
   config.headers.Authorization = `Bearer ${data.token}`
-
   return config
 }, error => {
   return Promise.reject(error)

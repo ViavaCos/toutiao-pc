@@ -32,7 +32,7 @@
         </el-form-item>
         <el-form-item>
           <!-- size="small" 控制表单大小 -->
-          <el-button type="primary" size="small" @click="getArticles">筛选</el-button>
+          <el-button type="primary" size="small" @click="query">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -175,6 +175,7 @@ export default {
           this.$message('已取消删除')
         })
     },
+    // 确定删除
     async just_del (id) {
       try {
         await this.$axios({
@@ -192,6 +193,12 @@ export default {
           type: 'error'
         })
       }
+    },
+    // 筛选
+    query () {
+      // 将当前页重置为首页
+      this.queryDate.page = 1
+      this.getArticles()
     }
   }
 }

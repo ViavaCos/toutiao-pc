@@ -9,6 +9,8 @@ import router from '@/router'
 import axios from '@/api'
 // 引入自定义插件
 import plugin from '@/components'
+// 引入全局样式
+import '@/styles/index.css'
 
 // 使用element-ui
 Vue.use(ElementUI)
