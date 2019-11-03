@@ -15,6 +15,8 @@ import session from '@/utils/session'
 import article from '@/views/article'
 // 素材管理
 import images from '@/views/images'
+// 文章发布
+import aaa from '@/views/publish'
 
 Vue.use(VueRouter)
 
@@ -29,7 +31,7 @@ const router = new VueRouter({
       { path: '/', component: Welcome },
       { path: 'article', component: article },
       { path: '/image', component: images },
-      { path: '/publish' },
+      { path: '/publish', component: aaa },
       { path: '/comment' },
       { path: '/fans' },
       { path: '/setting' }
