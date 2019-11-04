@@ -1,7 +1,7 @@
 <template>
   <div class="btn">
     <div @click="show" class="preview">
-      <img v-if="finalImage" :src="finalImage" />
+      <img v-if="value || finalImage" :src="value || finalImage" />
       <img v-else src="../assets/default.png" alt />
     </div>
     <el-dialog :visible.sync="dialogVisible" width="750px">
@@ -60,6 +60,7 @@
 <script>
 import session from '@/utils/session'
 export default {
+  props: ['value'],
   data () {
     return {
       // 是否显示对话框
