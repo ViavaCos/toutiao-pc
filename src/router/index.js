@@ -16,7 +16,9 @@ import article from '@/views/article'
 // 素材管理
 import images from '@/views/images'
 // 文章发布
-import aaa from '@/views/publish'
+import Publish from '@/views/publish'
+// 评论管理
+import Comment from '@/views/comment'
 
 Vue.use(VueRouter)
 
@@ -31,8 +33,8 @@ const router = new VueRouter({
       { path: '/', component: Welcome },
       { path: 'article', component: article },
       { path: '/image', component: images },
-      { path: '/publish', component: aaa },
-      { path: '/comment' },
+      { path: '/publish', component: Publish },
+      { path: '/comment', component: Comment },
       { path: '/fans' },
       { path: '/setting' }
 
