@@ -42,6 +42,7 @@
 
 <script>
 import session from '@/utils/session'
+// ① 引入事件总线
 import eventBus from '@/eventBus'
 // user/profile   get
 export default {
@@ -82,7 +83,7 @@ export default {
       this.$message.success('保存成功')
       //   this.$router.push('/')
 
-      // 设置name给home组件
+      // ② 设置name给home组件
       eventBus.$emit('setName', data.name)
 
       // 设置name给本地存储

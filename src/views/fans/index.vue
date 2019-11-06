@@ -15,14 +15,19 @@
             </div>
           </div>
           <div v-else class="tips">
-              <p>不好意思，你还没有粉丝需要管理~~</p>
+            <p>不好意思，你还没有粉丝需要管理~~</p>
           </div>
           <!-- 分页 -->
-          <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="total"
+            @current-change="changePage"
+          ></el-pagination>
         </el-tab-pane>
         <el-tab-pane label="粉丝画像" name="picture">
-            <!-- 2. 设置echarts容器 -->
-             <div ref="main" style="width: 600px;height:400px;"></div>
+          <!-- 2. 设置echarts容器 -->
+          <div ref="main" style="width: 600px;height:400px;"></div>
         </el-tab-pane>
       </el-tabs>
     </el-card>
@@ -48,13 +53,19 @@ export default {
     this.getFansInfo()
   },
   methods: {
+    // 获取粉丝信息
     async getFansInfo () {
       const {
         data: { data }
-      } = await this.$axios.get('followers', this.reqParams)
+      } = await this.$axios.get('followers', { params: this.reqParams })
 
       this.total = data.total_count
       this.fansList = data.results
+    },
+    // 分页
+    changePage (newPage) {
+      this.reqParams.page = newPage
+      this.getFansInfo()
     }
   },
   // 操作DOM
@@ -108,13 +119,13 @@ export default {
 </script>
 
 <style scoped lang='less'>
-.tips{
-    text-align: center;
-    font-size: 14px;
-    color: #ccc;
+.tips {
+  text-align: center;
+  font-size: 14px;
+  color: #ccc;
 }
 .fans-item {
-    display: inline-block;
+  display: inline-block;
   margin-top: 20px;
   margin-right: 20px;
   height: 190px;
