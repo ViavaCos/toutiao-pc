@@ -66,7 +66,8 @@
 
 <script>
 import session from '@/utils/session'
-
+// 引入事件总线
+import eventBus from '@/eventBus'
 export default {
   data () {
     return {
@@ -97,19 +98,21 @@ export default {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
-          }).then(() => {
-            session.delToken()
-            this.$router.push('/login')
-            this.$message({
-              type: 'success',
-              message: '退出成功!'
-            })
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消退出'
-            })
           })
+            .then(() => {
+              session.delToken()
+              this.$router.push('/login')
+              this.$message({
+                type: 'success',
+                message: '退出成功!'
+              })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消退出'
+              })
+            })
           break
       }
     }
@@ -119,6 +122,14 @@ export default {
     let { name, photo } = session.getToken() || {}
     this.name = name
     this.photo = photo
+    // 接收从setting组件传递过来的name数据
+    eventBus.$on('setName', data => {
+      this.name = data
+    })
+    // 接收从setting组件传递过来的photo数据
+    eventBus.$on('setPhoto', data => {
+      this.photo = data
+    })
   }
 }
 </script>
